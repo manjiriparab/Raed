@@ -89,8 +89,11 @@ Assistant: شكراً (shukran) - means thank you in Arabic.
     const reply = data.content[0].text
 
     return NextResponse.json({ reply, remaining: usage.remaining })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Chat error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal server error', details: error?.message || String(error) },
+      { status: 500 }
+    )
   }
 }
