@@ -1,6 +1,6 @@
 import { getDb } from './mongodb'
 
-const DAILY_LIMIT = 2
+const DAILY_LIMIT = 10
 
 interface UsageDoc {
   ip: string
