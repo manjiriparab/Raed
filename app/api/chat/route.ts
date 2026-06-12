@@ -3,6 +3,10 @@ import { checkAndIncrementUsage, getClientIp } from '@/lib/rateLimiter'
 
 
 export async function POST(request: NextRequest) {
+  console.log('ENV CHECK:', {
+    hasMongo: !!process.env.MONGODB_URI,
+    hasAnthropic: !!process.env.ANTHROPIC_API_KEY,
+  })
   try {
 
     const ip = getClientIp(request.headers)
