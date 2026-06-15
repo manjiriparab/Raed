@@ -27,7 +27,7 @@ export function useSpeechRecognition(onResult: (text: string) => void) {
   const ref = useRef<SpeechRecognitionInstance | null>(null)
   const finalTranscriptRef = useRef('')
 
-  const start = useCallback(() => {
+  const start = useCallback((lang: string = 'en-US') => {
     const SpeechRecognitionAPI =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
     if (!SpeechRecognitionAPI) return
@@ -35,7 +35,7 @@ export function useSpeechRecognition(onResult: (text: string) => void) {
     finalTranscriptRef.current = '' // reset on new start
 
     const rec: SpeechRecognitionInstance = new SpeechRecognitionAPI()
-    rec.lang = 'en-US' // supports both Arabic and English
+    rec.lang = lang// supports both Arabic and English
     rec.interimResults = true
     rec.maxAlternatives = 1
     rec.continuous = true
@@ -74,9 +74,15 @@ export function useSpeechSynthesis() {
     if (!window.speechSynthesis) return
     window.speechSynthesis.cancel()
 
+    // Remove emojis before speaking
+    const cleanText = text
+      .replace(/[^\x00-\x7F\u0600-\u06FF\u0750-\u077F ]/g, '') // keep only ASCII + Arabic
+      .replace(/\s+/g, ' ')
+      .trim()
+
     // Detect Arabic characters
-    const isArabic = /[\u0600-\u06FF]/.test(text)
-    const utterance = new SpeechSynthesisUtterance(text)
+    const isArabic = /[\u0600-\u06FF]/.test(cleanText)
+    const utterance = new SpeechSynthesisUtterance(cleanText)
     utterance.lang = isArabic ? 'ar-SA' : 'en-US'
     utterance.rate = 0.95
     utterance.pitch = 1.1

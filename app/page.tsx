@@ -15,6 +15,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
   const [dialect, setDialect] = useState('Modern Standard (Formal)')
+  const [micLang, setMicLang] = useState<'en-US' | 'ar-SA'>('en-US')
   const [remaining, setRemaining] = useState<number | null>(null)
   const { speak } = useSpeechSynthesis()
 
@@ -137,7 +138,7 @@ export default function Home() {
 
   // Greeting on first load
   useEffect(() => {
-    const greeting = "Hi! I'm Raed... I speak both English and Arabic. Feel free to talk or type in either language, and choose your preferred dialect from the options below. I'm here to help!"
+    const greeting = "Hi! I'm Raed 👋 Your bilingual companion for English & Arabic. Before you speak, select your language 🇺🇸 EN or 🇸🇦 AR using the toggle next to the mic. Then pick your preferred Gulf dialect below. Let's talk!"
     setTimeout(() => {
       setMessages([{ role: 'assistant', content: greeting }])
       setAvatarState('talking')
@@ -355,7 +356,8 @@ export default function Home() {
           {/* Mic button */}
           <button
             ref={micButtonRef}
-            onMouseDown={startListening}
+            onMouseDown={() => startListening(micLang)}
+            onTouchStart={(e) => { e.preventDefault(); startListening(micLang) }}
             onMouseUp={stopListening}
             disabled={isLoading}
             style={{
@@ -380,6 +382,29 @@ export default function Home() {
             } as React.CSSProperties}
           >
             🎤
+          </button>
+
+          {/* Language Toggle */}
+          <button
+            onClick={() => setMicLang(micLang === 'en-US' ? 'ar-SA' : 'en-US')}
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              border: '1px solid rgba(255,255,255,0.15)',
+              background: 'rgba(255,255,255,0.07)',
+              color: 'white',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '13px',
+              fontWeight: 600,
+              flexShrink: 0,
+              transition: 'all 0.2s',
+            }}
+          >
+            {micLang === 'en-US' ? '🇺🇸' : '🇸🇦'}
           </button>
         </div>
 
