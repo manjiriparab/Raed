@@ -23,6 +23,9 @@ npm run dev
 
 Open http://localhost:3000
 
+### 3. Demo
+https://master.d2yebtrkran3rc.amplifyapp.com/
+
 ## Features
 
 - 🎙 Voice input — hold mic button and speak
